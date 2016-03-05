@@ -91,9 +91,9 @@ Route::group(['middleware' => ['web']], function () {
 
 
     // Account
-    Route::get('login', ['before' => 'guest-only', 'uses' => 'AccountController@getLogin']);
+    Route::get('login', ['middleware' => 'guest', 'uses' => 'AccountController@getLogin']);
     Route::post('login', 'AccountController@postLogin');
-    Route::get('register', ['before' => 'guest-only', 'uses' => 'AccountController@getRegister']);
+    Route::get('register', ['middleware' => 'guest', 'uses' => 'AccountController@getRegister']);
     Route::post('register', 'AccountController@postRegister');
     Route::get('logout', 'AccountController@getLogout');
     Route::get('account/edit', ['uses' => 'AccountController@getEdit']);
@@ -109,13 +109,13 @@ Route::group(['middleware' => ['web']], function () {
 
     // Posts
     Route::get('posts/{category}', 'PostController@getByCategory');
-    Route::get('posts/{category}/new', ['before' => 'auth', 'uses' => 'PostController@getCreate']);
+    Route::get('posts/{category}/new', ['middleware' => 'auth', 'uses' => 'PostController@getCreate']);
     Route::get('posts/{postId}', 'PostController@getById');
-    Route::get('posts/{postId}/edit', ['before' => 'auth', 'uses' => 'PostController@getEdit']);
+    Route::get('posts/{postId}/edit', ['middleware' => 'auth', 'uses' => 'PostController@getEdit']);
     Route::get('posts', ['uses' => 'PostController@getByCategory']);
-    Route::post('posts/{category}/new', ['before' => 'csrf', 'uses' => 'PostController@postCreate']);
-    Route::post('posts/{postId}/edit', ['before' => 'csrf', 'uses' => 'PostController@postEdit']);
-    Route::get('posts/{postId}/delete', ['before' => 'auth', 'uses' => 'PostController@getDelete']);
+    Route::post('posts/{category}/new', ['uses' => 'PostController@postCreate']);
+    Route::post('posts/{postId}/edit', ['uses' => 'PostController@postEdit']);
+    Route::get('posts/{postId}/delete', ['middleware' => 'auth', 'uses' => 'PostController@getDelete']);
 
     // Static Pages
     Route::get('chat', ['uses' => 'PageController@getChat', 'as' => 'chat']);

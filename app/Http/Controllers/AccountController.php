@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateUserRequest;
+use App\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
+
 class AccountController extends BaseController
 {
-    /**
-    * Instantiate a new AccountController instance
-    */
-    public function __construct()
-    {
-        $this->beforeFilter('csrf', array('on' => 'post'));
-    }
 
     /**
     * Show login page
     */
     public function getLogin()
     {
-        return View::make('account.login');
+        return view('account.login');
     }
 
     /**
@@ -49,42 +47,29 @@ class AccountController extends BaseController
     */
     public function getRegister()
     {
-        return View::make('account/register');
+        return view('account/register');
     }
 
     /**
-    * Post register page
-    */
-    public function postRegister()
+     * Post register page
+     * @param CreateUserRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postRegister(CreateUserRequest $request)
     {
+        $user = new User;
+        $user->username   = $request->input('username');
+        $user->email      = $request->input('email');
+        $user->password   = Hash::make($request->input('password'));
+        $user->nickname   = $request->input('nickname');
+        $user->save();
 
-        $rules = [
-          'username'  => 'required|unique:users,username|min:5|max:20',
-          'password'  => 'required|min:5|max:20',
-          'email'     => 'required|email|unique:users',
-          'nickname'  => 'required|unique:users,nickname|min:2|max:10'
-        ];
+        $user->roles()->attach(3, [
+          'created_at'  => Carbon::now(),
+          'updated_at'  => Carbon::now()
+        ]);
 
-        $validator = Validator::make(Input::all(), $rules);
-
-        if ($validator->passes()) {
-
-            $user = new User;
-            $user->username   = Input::get('username');
-            $user->email      = Input::get('email');
-            $user->password   = Hash::make(Input::get('password'));
-            $user->nickname   = Input::get('nickname');
-            $user->save();
-
-            $user->roles()->attach(3, [
-              'created_at'  => Carbon::now(),
-              'updated_at'  => Carbon::now()
-            ]);
-
-            return Redirect::to('')->with('success', '회원가입이 되었습니다.');
-        }
-
-        return Redirect::to('register')->withInput(Input::all())->withErrors($validator);
+        return redirect('')->with('success', '회원가입이 되었습니다.');
     }
 
 
@@ -93,7 +78,7 @@ class AccountController extends BaseController
     */
     public function getEdit()
     {
-        return View::make('account.edit')->with('header', '수정')->with('user', Auth::user());
+        return view('account.edit')->with('header', '수정')->with('user', Auth::user());
     }
 
 

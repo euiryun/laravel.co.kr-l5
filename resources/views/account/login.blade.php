@@ -8,12 +8,12 @@
 <div class="row">
     <div class="span5 offset2">
         <form class="form-horizontal" method="post">
-            <input type="hidden" name="csrf_token" value="{{ Session::getToken() }}" />
+            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
             <div class="control-group {{ ($errors->has('username') ? 'error' : '') }}">
                 <label class="control-label" for="inputusername">아이디</label>
                 <div class="controls">
-                    <input type="text" id="inputusername" placeholder="아이디" name="username" value="{{ Input::old('username') }}">
+                    <input type="text" id="inputusername" placeholder="아이디" name="username" value="{{ old('username') }}">
                     {{ $errors->first('username') }}
                 </div>
             </div>

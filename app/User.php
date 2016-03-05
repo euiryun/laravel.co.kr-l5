@@ -1,8 +1,7 @@
 <?php
 
-namespace app;
+namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -46,7 +45,7 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany('Role', 'role_user')->withTimestamps();
+        return $this->belongsToMany('App\Role', 'role_user')->withTimestamps();
     }
 
     public function posts()

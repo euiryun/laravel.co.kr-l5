@@ -8,12 +8,12 @@
 <div class="row">
     <div class="span5 offset2">
         <form class="form-horizontal" method="post">
-            <input type="hidden" name="csrf_token" value="{{ Session::getToken() }}" />
+            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
             <div class="control-group {{ ($errors->has('username') ? 'error' : '') }}">
                 <label class="control-label" for="inputUsername">아이디</label>
                 <div class="controls">
-                    <input type="text" id="inputUsername" placeholder="아이디" name="username" value="{{ Input::old('username') }}">
+                    <input type="text" id="inputUsername" placeholder="아이디" name="username" value="{{ old('username') }}">
                     {{ $errors->first('username') }}
                 </div>
             </div>
@@ -29,7 +29,7 @@
             <div class="control-group {{ ($errors->has('email') ? 'error' : '') }}">
                 <label class="control-label" for="inputEmail">이메일</label>
                 <div class="controls">
-                    <input type="text" id="inputEmail" placeholder="이메일" name="email" value="{{ Input::old('email') }}">
+                    <input type="text" id="inputEmail" placeholder="이메일" name="email" value="{{ old('email') }}">
                     {{ $errors->first('email') }}
                 </div>
             </div>
@@ -37,7 +37,7 @@
             <div class="control-group {{ ($errors->has('nickname') ? 'error' : '') }}">
                 <label class="control-label" for="inputNickname">별명</label>
                 <div class="controls">
-                    <input type="text" id="inputNickname" placeholder="별명" name="nickname" value="{{ Input::old('nickname') }}">
+                    <input type="text" id="inputNickname" placeholder="별명" name="nickname" value="{{ old('nickname') }}">
                     {{ $errors->first('nickname') }}
                 </div>
             </div>

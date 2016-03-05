@@ -2,11 +2,10 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Ciconia\Ciconia;
 use Ciconia\Extension\Gfm;
-use Config;
-use View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        view()->share('categories', config('site.postCategories'));
     }
 
     /**
@@ -28,7 +27,6 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
 
-        View::share('categories', Config::get('site.postCategories'));
 
         $this->app->singleton('Ciconia\Ciconia', function() {
             $markdown = new Ciconia();

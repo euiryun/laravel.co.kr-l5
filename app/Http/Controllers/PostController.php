@@ -2,37 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreatePostRequest;
+use App\Post;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
+
 class PostController extends BaseController
 {
-    protected function getValidator()
-    {
-        $rules = [
-            'title'     => 'required',
-            'content'   => 'required',
-            'category'  => 'required'
-        ];
-
-        $validator = Validator::make(Input::all(), $rules);
-        return $validator;
-    }
-
     /**
-    * Create a post
-    */
-    public function postCreate($category)
+     * Create a post
+     * @param CreatePostRequest $request
+     * @param $category
+     * @return
+     */
+    public function postCreate(CreatePostRequest $request, $category)
     {
-        $validator = $this->getValidator();
-        if (!$validator->passes()) {
-            return Redirect::to('posts/' . $category . '/' . 'new')
-                    ->withInput(Input::all())
-                    ->withErrors($validator)
-                    ->with('category', $category);
-        }
+//        if (!$validator->passes()) {
+//            return Redirect::to('posts/' . $category . '/' . 'new')
+//                    ->withInput(Input::all())
+//                    ->withErrors($validator)
+//                    ->with('category', $category);
+//        }
 
         $post           = new Post;
-        $post->title    = Input::get('title');
-        $post->content  = Input::get('content');
-        $post->category = Input::get('category');
+        $post->title    = $request->input('title');
+        $post->content  = $request->input('content');
+        $post->category = $category;
 
         Auth::user()->posts()->save($post);
 
@@ -82,10 +79,9 @@ class PostController extends BaseController
     */
     public function getCreate($category)
     {
-        return View::make('posts.create')->with([
-          'category' => $category,
-          'markdown' => App::make('Ciconia\Ciconia')
-        ]);
+        $markdown = app('Ciconia\Ciconia');
+        return view('posts.create', compact('category', 'markdown'));
+
     }
 
     /**
@@ -99,10 +95,7 @@ class PostController extends BaseController
             $posts = Post::with('user')->where('category', $category)->orderBy('id', 'desc')->paginate(15);
         }
 
-        return View::make('posts.index')->with([
-            'posts'    => $posts,
-            'category' => $category
-        ]);
+        return view('posts.index', compact('posts', 'category'));
     }
 
     /**
@@ -114,11 +107,10 @@ class PostController extends BaseController
         $post->views++;
         $post->save();
 
-        return View::make('posts.view')->with([
-            'post' => $post,
-            'content' => App::make('Ciconia\Ciconia')->render($post->content),
-            'category'=>$post->category
-        ]);
+        $content = App('Ciconia\Ciconia')->render($post->content);
+        $category = $post->category;
+
+        return view('posts.view', compact('post', 'content', 'category'));
     }
 
     /**

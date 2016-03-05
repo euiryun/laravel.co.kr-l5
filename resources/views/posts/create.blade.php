@@ -43,12 +43,12 @@ $(function(){
   </div>
   <div class="span9">
     <form method="post">
-      <input type="hidden" name="csrf_token" value="{{ Session::getToken() }}" />
+      <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
       <div class="control-group {{ ($errors->has('title') ? 'error' : '') }}">
         <label class="control-label" for="inputTitle">제목</label>
         <div class="controls">
-          <input type="text" id="inputTitle" name="title" placeholder="제목" value="{{ Input::old('title') }}" class="input-block-level">
+          <input type="text" id="inputTitle" name="title" placeholder="제목" value="{{ old('title') }}" class="input-block-level">
           {{ $errors->first('title') }}
         </div>
       </div>
@@ -64,7 +64,7 @@ $(function(){
       <div class="control-group {{ ($errors->has('content') ? 'error' : '') }}">
         <label class="control-label" for="inputContent">내용 <a class="pull-right" href="http://daringfireball.net/projects/markdown/"><small>Markdown</small></a></label>
         <div class="controls">
-          <textarea rows="10" id="inputContent" name="content" class="input-block-level">{{ Input::old('content') }}</textarea>
+          <textarea rows="10" id="inputContent" name="content" class="input-block-level">{{ old('content') }}</textarea>
           {{ $errors->first('content') }}
         </div>
       </div>
@@ -72,7 +72,7 @@ $(function(){
       <div class="control-group">
         <label class="control-label">미리보기</label>
         <div class="controls preview" id="postPreview">
-        {{ $markdown->render(Input::old('content')) }}
+        {{ $markdown->render(old('content')) }}
         </div>
       </div>
 

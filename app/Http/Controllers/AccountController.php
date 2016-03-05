@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UserLoginAttemptRequest;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AccountController extends BaseController
 {
-
     /**
     * Show login page
     */
@@ -19,27 +20,21 @@ class AccountController extends BaseController
     }
 
     /**
-    * Post login
-    */
-    public function postLogin()
+     * Post login
+     * @param UserLoginAttemptRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postLogin(UserLoginAttemptRequest $request)
     {
-        $rules = [
-            'username' => 'required',
-            'password' => 'required'
-        ];
+        $username = $request->username;
+        $password = $request->password;
 
-        $validator = Validator::make(Input::all(), $rules);
-
-        if ($validator->passes()) {
-            if (Auth::attempt(array('username' => Input::get('username'), 'password' => Input::get('password')))) {
-                return Redirect::to('')->with('success', '로그인 되었습니다.');
-            } else {
-                Input::flashOnly('username');
-                return Redirect::to('login')->with('error', '아이디 또는 비밀번호가 잘못되었습니다.');
-            }
+        if (Auth::attempt(compact('username', 'password'))) {
+            return redirect('')->with('success', '로그인 되었습니다.');
+        } else {
+            $request->flashOnly('username');
+            return redirect()->route('login.form')->with('error', '아이디또는 비밀번호가 잘못되었습니다.');
         }
-
-        return Redirect::to('login')->withErrors($validator);
     }
 
     /**

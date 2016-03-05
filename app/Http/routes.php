@@ -91,7 +91,12 @@ Route::group(['middleware' => ['web']], function () {
 
 
     // Account
-    Route::get('login', ['middleware' => 'guest', 'uses' => 'AccountController@getLogin']);
+    Route::get('login', [
+        'middleware' => 'guest',
+        'uses' => 'AccountController@getLogin',
+        'as' => 'login.form'
+    ]);
+
     Route::post('login', 'AccountController@postLogin');
     Route::get('register', ['middleware' => 'guest', 'uses' => 'AccountController@getRegister']);
     Route::post('register', 'AccountController@postRegister');

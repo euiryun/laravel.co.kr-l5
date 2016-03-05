@@ -8,7 +8,7 @@ class Post extends Model
 {
     public function User()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('App\User');
     }
 
     public function getAuthIdentifier()

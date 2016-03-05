@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePostRequest;
 use App\Post;
+use Ciconia\Ciconia;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
@@ -19,21 +21,14 @@ class PostController extends BaseController
      */
     public function postCreate(CreatePostRequest $request, $category)
     {
-//        if (!$validator->passes()) {
-//            return Redirect::to('posts/' . $category . '/' . 'new')
-//                    ->withInput(Input::all())
-//                    ->withErrors($validator)
-//                    ->with('category', $category);
-//        }
-
         $post           = new Post;
-        $post->title    = $request->input('title');
-        $post->content  = $request->input('content');
+        $post->title    = $request->title;
+        $post->content  = $request->content;
         $post->category = $category;
 
         Auth::user()->posts()->save($post);
 
-        return Redirect::to('posts/' . $post->id)->with('success', '글이 등록 되었습니다.');
+        return redirect()->route('post.view', ['postId' => $post->id])->with('success', '글이 등록 되었습니다.');
     }
 
     /**
@@ -99,18 +94,24 @@ class PostController extends BaseController
     }
 
     /**
-    * Display a post
-    */
-    public function getById($postId)
+     * Display a post
+     * @param Request $request
+     * @param Ciconia $markdown
+     * @param $postId
+     * @return View
+     */
+    public function getById(Request $request, Ciconia $markdown, $postId)
     {
         $post = Post::find($postId);
         $post->views++;
         $post->save();
 
-        $content = App('Ciconia\Ciconia')->render($post->content);
+        $content = $markdown->render($post->content);
         $category = $post->category;
 
-        return view('posts.view', compact('post', 'content', 'category'));
+        $signedInUser = $request->user();
+
+        return view('posts.view', compact('post', 'content', 'category', 'signedInUser'));
     }
 
     /**

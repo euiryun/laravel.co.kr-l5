@@ -23,16 +23,16 @@ $(function(){
   <div class="span9">
     <h2 class="title">{{ $post->title }}</h2>
       <ul class="nav nav-pills">
-      @if (Auth::check() && (Auth::user()->id == $post->user_id))
+      @if ($signedInUser->id === $post->user_id))
         <li class="pull-right"><a href="{{ URL::to('posts/' . $post->id . '/delete') }}"><i class="icon-trash"></i> 삭제</a></li>
         <li class="pull-right"><a href="{{ URL::to('posts/' . $post->id . '/edit') }}"><i class="icon-edit"></i> 수정</a></li>
       @endif
         <li><a href="{{ URL::to('users/' . $post->user->id . '/' . $post->user->username) }}" title="글쓴이"><i class="icon-user"></i> {{ $post->user->nickname }}</a></li>
         <li class="disabled"><a href="#" title="조회"><i class="icon-eye-open"></i> {{ $post->views }}</a></li>
-        <li class="disabled"><a href="#" title="등록"><i class="icon-time"></i> {{ Carbon::createFromFormat('Y-m-d H:i:s', $post->created_at)->diffForHumans() }}</a></li>
+        <li class="disabled"><a href="#" title="등록"><i class="icon-time"></i> {{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $post->created_at)->diffForHumans() }}</a></li>
       </ul>
     <div class="content">
-      {{ $content }}
+      {!! $content !!}
     </div>
     <ul class="nav nav-pills">
       <li class="pull-right"><a href="{{ URL::to('posts/' . $post->category) }}"><i class="icon-list"></i> 목록</a></li>

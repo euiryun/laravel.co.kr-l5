@@ -1,6 +1,8 @@
 <?php
 
 use App\Post;
+use Ciconia\Ciconia;
+use Illuminate\Support\Facades\Cache;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,19 +31,19 @@ Route::group(['middleware' => ['web']], function () {
 
     $render4Doc = function ($page = 'introduction') {
         $cacheKey = "{$page}.md-cache";
+        Cache::forget($cacheKey);
 
         if (!Cache::get($cacheKey)) {
             if (!$file = File::get(base_path()."/../../shared/docs/{$page}.md")) {
                 App::abort(404, "Unable to find {$page}.md");
             }
-
-            $markdown = App::make('Ciconia\Ciconia');
-            Cache::put($cacheKey, $markdown->render($file), Carbon::now()->addMinutes(10));
+            $markdown = app(Ciconia::class);
+            Cache::put($cacheKey, $markdown->render($file), Carbon\Carbon::now()->addMinutes(10));
         }
 
-        return View::make('docs.index')->with([
+        return view('docs.index', [
             'content' => Cache::get($cacheKey),
-            'page'    => $page,
+            'page' => $page
         ]);
     };
 
@@ -115,7 +117,10 @@ Route::group(['middleware' => ['web']], function () {
     // Posts
     Route::get('posts/{category}', 'PostController@getByCategory');
     Route::get('posts/{category}/new', ['middleware' => 'auth', 'uses' => 'PostController@getCreate']);
-    Route::get('posts/{postId}', 'PostController@getById');
+    Route::get('posts/{postId}', [
+        'uses' => 'PostController@getById',
+        'as' => 'post.view'
+    ]);
     Route::get('posts/{postId}/edit', ['middleware' => 'auth', 'uses' => 'PostController@getEdit']);
     Route::get('posts', ['uses' => 'PostController@getByCategory']);
     Route::post('posts/{category}/new', ['uses' => 'PostController@postCreate']);

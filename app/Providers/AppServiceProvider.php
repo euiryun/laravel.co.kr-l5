@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Ciconia\Ciconia;
 use Ciconia\Extension\Gfm;
@@ -26,9 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
-
-        $this->app->singleton('Ciconia\Ciconia', function() {
+        $this->app->singleton(Ciconia::class, function() {
             $markdown = new Ciconia();
             $markdown->addExtension(new Gfm\FencedCodeBlockExtension());
             $markdown->addExtension(new Gfm\TaskListExtension());
@@ -36,7 +33,6 @@ class AppServiceProvider extends ServiceProvider
             $markdown->addExtension(new Gfm\WhiteSpaceExtension());
             $markdown->addExtension(new Gfm\TableExtension());
             $markdown->addExtension(new Gfm\UrlAutoLinkExtension());
-
             return $markdown;
         });
     }

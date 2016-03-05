@@ -27,7 +27,7 @@ class Carbon extends \Carbon\Carbon {
         '전'
     );
 
-    public function diffForHumans(\Carbon\Carbon $other = null)
+    public function diffForHumans(\Carbon\Carbon $other = null, $absolute = false)
     {
         $isNow = $other === null;
 

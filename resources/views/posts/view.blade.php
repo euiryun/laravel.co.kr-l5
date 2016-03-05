@@ -29,7 +29,7 @@ $(function(){
       @endif
         <li><a href="{{ URL::to('users/' . $post->user->id . '/' . $post->user->username) }}" title="글쓴이"><i class="icon-user"></i> {{ $post->user->nickname }}</a></li>
         <li class="disabled"><a href="#" title="조회"><i class="icon-eye-open"></i> {{ $post->views }}</a></li>
-        <li class="disabled"><a href="#" title="등록"><i class="icon-time"></i> {{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $post->created_at)->diffForHumans() }}</a></li>
+        <li class="disabled"><a href="#" title="등록"><i class="icon-time"></i> {{ $post->createdAt() }}</a></li>
       </ul>
     <div class="content">
       {!! $content !!}

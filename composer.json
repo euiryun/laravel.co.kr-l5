@@ -22,7 +22,7 @@
         ],
         "psr-4": {
             "App\\": "app/",
-            "LaravelKorea\\" : "app/LaravelKorea"
+            "LaravelKorea\\" : "LaravelKorea"
         }
     },
     "autoload-dev": {

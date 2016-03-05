@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+
 class UserController extends BaseController
 {
     /**
@@ -10,7 +12,11 @@ class UserController extends BaseController
     public function getIndex()
     {
         $users = User::orderBy('id', 'desc')->paginate(16);
-        return View::make('users.index')->with('header', '사용자')->with('users', $users);
+
+        return view('users.index', [
+            'header' => '사용자',
+            'users' => $users
+        ]);
     }
 
     /**
@@ -21,10 +27,7 @@ class UserController extends BaseController
         $user = User::find($userId);
         $posts = $user->posts()->take(10)->orderBy('id', 'desc')->get();
 
-        return View::make('users.view')->with([
-            'user'        => $user,
-            'posts'       => $posts
-        ]);
+        return view('users.view', compact('user', 'posts'));
     }
 
     /**
@@ -35,9 +38,6 @@ class UserController extends BaseController
         $user = User::find($userId);
         $posts = $user->posts()->orderBy('id', 'desc')->paginate(15);
 
-        return View::make('users.posts')->with([
-          'user'        => $user,
-          'posts'       => $posts
-        ]);
+        return view('users.posts', compact('user', 'posts'));
     }
 }

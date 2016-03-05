@@ -101,7 +101,10 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('register', ['middleware' => 'guest', 'uses' => 'AccountController@getRegister']);
     Route::post('register', 'AccountController@postRegister');
     Route::get('logout', 'AccountController@getLogout');
-    Route::get('account/edit', ['uses' => 'AccountController@getEdit']);
+    Route::get('account/edit', [
+        'uses' => 'AccountController@getEdit',
+        'as' => 'account.edit.form'
+    ]);
     Route::post('account/edit', ['uses' => 'AccountController@postEdit']);
     Route::get('account/delete', ['uses' => 'AccountController@getDelete']);
     Route::post('account/delete', ['uses' => 'AccountController@postDelete']);

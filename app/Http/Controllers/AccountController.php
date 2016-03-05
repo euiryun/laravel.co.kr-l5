@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UserInfoUpdateRequest;
 use App\Http\Requests\UserLoginAttemptRequest;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -69,46 +71,36 @@ class AccountController extends BaseController
 
 
     /**
-    * Show edit page
-    */
-    public function getEdit()
+     * Show edit page
+     * @param Request $request
+     * @return
+     */
+    public function getEdit(Request $request)
     {
-        return view('account.edit')->with('header', '수정')->with('user', Auth::user());
+        return view('account.edit')->with('header', '수정')->with('user', $request->user());
     }
 
 
     /**
-    * Post edit page
-    */
-    public function postEdit()
+     * Post edit page
+     * @param UserInfoUpdateRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postEdit(UserInfoUpdateRequest $request)
     {
+        $user = $request->user();
+        $user->nickname   = $request->nickname;
+        $user->email   = $request->email;
+        $user->about   = $request->about;
 
-        $user = Auth::user();
-
-        $rules = [
-            'nickname'  => 'required|unique:users,nickname,' . $user->id . '|min:2|max:10',
-            'email'     => 'required|email|unique:users,email,' . $user->id,
-            'about'     => 'max:100',
-            'password'  => 'min:5|max:20'
-        ];
-
-        $validator = Validator::make(Input::all(), $rules);
-
-        if ($validator->passes()) {
-            $user->nickname   = Input::get('nickname');
-            $user->email   = Input::get('email');
-            $user->about   = Input::get('about');
-
-            if(Input::has('password')) {
-                $user->password = Hash::make(Input::get('password'));
-            }
-
-            $user->save();
-
-            return Redirect::to('account/edit')->with('success', '회원정보가 수정 되었습니다.');
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
         }
 
-        return Redirect::to('account/edit')->withInput(Input::all())->withErrors($validator);
+
+        $user->save();
+
+        return redirect()->route('account.edit.form')->with('success', '회원정보가 수정 되었습니다.');
     }
 
     /**
@@ -125,7 +117,7 @@ class AccountController extends BaseController
     */
     public function getDelete()
     {
-        return View::make('account.delete')->with('header', '탈퇴')->with('user', Auth::user());
+        return view('account.delete')->with('header', '탈퇴')->with('user', Auth::user());
     }
 
     /**

@@ -7,7 +7,7 @@
 <div class="row">
     <div class="span6 offset3">
         <form class="form-horizontal" method="post">
-            <input type="hidden" name="csrf_token" value="{{ Session::getToken() }}" />
+            <input type="hidden" name="_token" value="{{ csrf_token()}}" />
 
             <div class="control-group">
                 <label class="control-label" for="inputUsername">아이디</label>
@@ -19,14 +19,14 @@
             <div class="control-group">
                 <label class="control-label" for="inputNickname">별명</label>
                 <div class="controls">
-                    <input type="text" name="nickname" id="inputNickname" placeholder="별명" value="{{ Input::old('nickname', $user->nickname) }}">
+                    <input type="text" name="nickname" id="inputNickname" placeholder="별명" value="{{ old('nickname', $user->nickname) }}">
                 </div>
             </div>
 
             <div class="control-group {{ ($errors->has('email') ? 'error' : '') }}">
                 <label class="control-label" for="inputEmail">이메일</label>
                 <div class="controls">
-                    <input type="text" name="email" id="inputEmail" placeholder="이메일" value="{{ Input::old('email', $user->email) }}">
+                    <input type="text" name="email" id="inputEmail" placeholder="이메일" value="{{ old('email', $user->email) }}">
                     {{ $errors->first('email') }}
                 </div>
             </div>
@@ -42,7 +42,7 @@
             <div class="control-group {{ ($errors->has('about') ? 'error' : '') }}">
                 <label class="control-label" for="inputContent">소개</label>
                 <div class="controls">
-                    <textarea rows="10" id="inputContent" name="about">{{ Input::old('about', $user->about) }}</textarea>
+                    <textarea rows="10" id="inputContent" name="about">{{ old('about', $user->about) }}</textarea>
                     {{ $errors->first('about') }}
                 </div>
             </div>

@@ -61,8 +61,8 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('docs/{page?}', $render4Doc);
 
-    Route::get('search', function () {
-        $query = Input::get('query');
+    Route::get('search', function (\Illuminate\Http\Request $request) {
+        $query = $request->input('query');
 
         if ($query) {
             $posts = Post::with('user')
@@ -74,10 +74,7 @@ Route::group(['middleware' => ['web']], function () {
             $posts = false;
         }
 
-        return View::make('search')->with([
-            'posts'      => $posts,
-            'query'      => $query,
-        ]);
+        return view('search', compact('posts', 'query'));
     });
 
     Route::get('changelog', function () {

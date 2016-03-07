@@ -120,14 +120,15 @@ class AccountController extends BaseController
     }
 
     /**
-    * Delete
-    */
-    public function postDelete()
+     * Delete
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postDelete(Request $request)
     {
-        $user= Auth::user();
+        $user = $request->user();
         $user->posts()->delete();
         $user->delete();
-        Auth::logout();
 
         return redirect('/')->with('success', '탈퇴 되었습니다.');
     }

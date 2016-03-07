@@ -3035,3 +3035,6 @@ Stack trace:
 #40 /Users/moonkuykyong/Dev/laravel.co.kr-l5/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(99): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #41 /Users/moonkuykyong/Dev/laravel.co.kr-l5/public/index.php(54): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #42 {main}  
+[2016-03-07 08:17:21] local.ERROR: exception 'Symfony\Component\Debug\Exception\FatalErrorException' with message 'Class 'Carbon' not found' in /Users/moonkuykyong/Dev/laravel.co.kr-l5/storage/framework/views/16968224f74c8647187907f3766e494a7ad94ed5.php:26
+Stack trace:
+#0 {main}  

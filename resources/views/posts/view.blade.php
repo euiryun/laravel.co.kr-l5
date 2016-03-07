@@ -23,7 +23,7 @@ $(function(){
   <div class="span9">
     <h2 class="title">{{ $post->title }}</h2>
       <ul class="nav nav-pills">
-      @if ($signedInUser->id === $post->user_id))
+      @if ($signedInUser->id === $post->userId())
         <li class="pull-right"><a href="{{ URL::to('posts/' . $post->id . '/delete') }}"><i class="icon-trash"></i> 삭제</a></li>
         <li class="pull-right"><a href="{{ URL::to('posts/' . $post->id . '/edit') }}"><i class="icon-edit"></i> 수정</a></li>
       @endif

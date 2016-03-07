@@ -32,12 +32,12 @@ $(function(){
   </div>
   <div class="span9">
     <form method="post">
-      <input type="hidden" name="csrf_token" value="{{ Session::getToken() }}" />
+      <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
       <div class="control-group {{ ($errors->has('title') ? 'error' : '') }}">
         <label class="control-label" for="inputTitle">제목</label>
         <div class="controls">
-          <input type="text" id="inputTitle" name="title" placeholder="제목" class="input-block-level" value="{{ Input::old('title', $post->title) }}">
+          <input type="text" id="inputTitle" name="title" placeholder="제목" class="input-block-level" value="{{ old('title', $post->title) }}">
           {{ $errors->first('title') }}
         </div>
       </div>
@@ -53,7 +53,7 @@ $(function(){
       <div class="control-group {{ ($errors->has('content') ? 'error' : '') }}">
         <label class="control-label" for="inputContent">내용</label>
         <div class="controls">
-          <textarea rows="20" id="inputContent" name="content" class="input-block-level">{{ Input::old('content', $post->content) }}</textarea>
+          <textarea rows="20" id="inputContent" name="content" class="input-block-level">{{ old('content', $post->content) }}</textarea>
           {{ $errors->first('content') }}
         </div>
       </div>

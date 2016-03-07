@@ -7,7 +7,7 @@
 <div class="row">
     <div class="span6 offset3">
         <form class="form-horizontal" method="post">
-            <input type="hidden" name="csrf_token" value="{{ Session::getToken() }}" />
+            <input type="hidden" name="_token" value="{{ csrf_token()  }}" />
 
             <h3>탈퇴 하시겠습니까?</h3>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Post;
 use Ciconia\Ciconia;
 use Illuminate\Http\Request;
@@ -28,28 +29,27 @@ class PostController extends BaseController
 
         Auth::user()->posts()->save($post);
 
-        return redirect()->route('post.view', ['postId' => $post->id])->with('success', '글이 등록 되었습니다.');
+        return redirect()->route('post.view', ['postId' => $post->id])
+                ->with('success', '글이 등록 되었습니다.');
     }
 
     /**
-    * Edit a post
-    */
-    public function postEdit($postId)
+     * Edit a post
+     * @param UpdatePostRequest $request
+     * @param $postId
+     * @return
+     */
+    public function postEdit(UpdatePostRequest $request, $postId)
     {
-        $validator = $this->getValidator();
-        if (!$validator->passes()) {
-            return Redirect::to('posts/' . $postId . '/edit')
-                ->withInput(Input::all())
-                ->withErrors($validator);
-        }
-
         $post           = Post::find($postId);
-        $post->title    = Input::get('title');
-        $post->content  = Input::get('content');
-        $post->category = Input::get('category');
+        $post->title = $request->title;
+        $post->content = $request->content;
+        $post->category = $request->category;
         $post->save();
 
-        return Redirect::to('posts/' . $post->id)->with('success', '글이 수정 되었습니다.');
+        return redirect()->route('post.view', [
+            'postId' => $post->id
+        ])->with('success', '글이 수정 되었습니다.');
     }
 
     /**
@@ -69,14 +69,15 @@ class PostController extends BaseController
         return Redirect::to('posts/' . $postId);
     }
 
-  /**
-    * Create a post
-    */
-    public function getCreate($category)
+    /**
+     * Create a post
+     * @param Ciconia $markdown
+     * @param $category
+     * @return View
+     */
+    public function getCreate(Ciconia $markdown, $category)
     {
-        $markdown = app('Ciconia\Ciconia');
         return view('posts.create', compact('category', 'markdown'));
-
     }
 
     /**
@@ -115,20 +116,24 @@ class PostController extends BaseController
     }
 
     /**
-    * Edit a post
-    */
-    public function getEdit($postId)
+     * Edit a post
+     * @param Request $request
+     * @param Ciconia $markdown
+     * @param $postId
+     * @return View
+     */
+    public function getEdit(Request $request, Ciconia $markdown, $postId)
     {
         $post = Post::find($postId);
+        $user = $request->user();
 
-        if(Auth::check() && $post->user_id == Auth::user()->id) {
-          return View::make('posts.edit')->with([
-            'post'     => $post,
-            'markdown' => App::make('Ciconia\Ciconia'),
-            'category' => $post->category
-          ]);
+        if (!$user) {
+            return Redirect::to('posts/' . $postId);
         }
 
-        return Redirect::to('posts/' . $postId);
+        if ($user->id === $post->userId()) {
+            $category = $post->category;
+            return view('posts.edit', compact('post', 'markdown', 'category'));
+        }
     }
 }

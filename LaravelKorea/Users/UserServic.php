@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelKorea\User;
+namespace LaravelKorea\Users;
 
 class UserService
 {

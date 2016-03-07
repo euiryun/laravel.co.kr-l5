@@ -17,6 +17,11 @@ class Post extends Model
         return $this->getKey();
     }
 
+    public function userId()
+    {
+        return (int) $this->user_id;
+    }
+
     public function createdAt()
     {
         return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->diffForHumans();

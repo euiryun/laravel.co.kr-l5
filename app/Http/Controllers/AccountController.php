@@ -97,7 +97,6 @@ class AccountController extends BaseController
             $user->password = Hash::make($request->password);
         }
 
-
         $user->save();
 
         return redirect()->route('account.edit.form')->with('success', '회원정보가 수정 되었습니다.');
@@ -129,6 +128,7 @@ class AccountController extends BaseController
         $user->posts()->delete();
         $user->delete();
         Auth::logout();
-        return Redirect::to('/')->with('success', '탈퇴 되었습니다.');
+
+        return redirect('/')->with('success', '탈퇴 되었습니다.');
     }
 }
